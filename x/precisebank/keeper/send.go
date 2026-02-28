@@ -496,3 +496,7 @@ func (k Keeper) GetDenomMetaData(ctx context.Context, denom string) (banktypes.M
 func (k Keeper) SetDenomMetaData(ctx context.Context, denomMetaData banktypes.Metadata) {
 	k.bk.SetDenomMetaData(ctx, denomMetaData)
 }
+
+func (k Keeper) HasDenomMetaData(ctx context.Context, denom string) bool {
+	return k.bk.HasDenomMetaData(ctx, denom)
+}
