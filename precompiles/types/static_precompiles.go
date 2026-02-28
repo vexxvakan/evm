@@ -24,7 +24,6 @@ import (
 	channelkeeper "github.com/cosmos/ibc-go/v10/modules/core/04-channel/keeper"
 
 	"github.com/cosmos/cosmos-sdk/codec"
-	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	distributionkeeper "github.com/cosmos/cosmos-sdk/x/distribution/keeper"
 	govkeeper "github.com/cosmos/cosmos-sdk/x/gov/keeper"
 	slashingkeeper "github.com/cosmos/cosmos-sdk/x/slashing/keeper"
@@ -188,7 +187,7 @@ func (s StaticPrecompiles) WithSlashingPrecompile(
 }
 
 func (s StaticPrecompiles) WithMintPrecompile(
-	bankKeeper bankkeeper.Keeper,
+	bankKeeper cmn.BankKeeper,
 	codec codec.Codec,
 	opts ...Option,
 ) StaticPrecompiles {
