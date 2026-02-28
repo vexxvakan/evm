@@ -40,6 +40,6 @@ func (p *Precompile) Mint(
 		return nil, err
 	}
 
-	// TODO
-	return method.Outputs.Pack()
+	// Returning `true` here because our abi.json specifies "internalType": "bool" as only output
+	return method.Outputs.Pack(true)
 }
