@@ -11,7 +11,6 @@ import (
 	_ "embed"
 
 	cmn "github.com/cosmos/evm/precompiles/common"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
 
 	"cosmossdk.io/core/address"
 	storetypes "cosmossdk.io/store/types"
@@ -59,7 +58,7 @@ func NewPrecompile(
 		Precompile: cmn.Precompile{
 			KvGasConfig:           storetypes.KVGasConfig(),
 			TransientKVGasConfig:  storetypes.TransientGasConfig(),
-			ContractAddress:       common.HexToAddress(evmtypes.GovPrecompileAddress),
+			ContractAddress:       common.HexToAddress(MintPrecompileAddress),
 			BalanceHandlerFactory: cmn.NewBalanceHandlerFactory(bankKeeper),
 		},
 		ABI:        ABI,

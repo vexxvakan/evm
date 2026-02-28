@@ -28,6 +28,6 @@ interface IMint {
     function mint(
         address to,
         string memory token,
-        uint64 value
+        uint256 value
     ) external returns (bool success);
 }
