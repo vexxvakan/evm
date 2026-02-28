@@ -44,4 +44,5 @@ type BankKeeper interface {
 
 	GetDenomMetaData(ctx context.Context, denom string) (banktypes.Metadata, bool)
 	SetDenomMetaData(ctx context.Context, denomMetaData banktypes.Metadata)
+	HasDenomMetaData(ctx context.Context, denom string) bool
 }

@@ -18,7 +18,6 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 )
 
 var _ vm.PrecompiledContract = &Precompile{}
@@ -44,7 +43,7 @@ type Precompile struct {
 	cmn.Precompile
 
 	abi.ABI
-	bankKeeper bankkeeper.Keeper
+	bankKeeper cmn.BankKeeper
 	codec      codec.Codec
 	addrCdc    address.Codec
 }
@@ -52,7 +51,7 @@ type Precompile struct {
 // NewPrecompile creates a new gov Precompile instance as a
 // PrecompiledContract interface.
 func NewPrecompile(
-	bankKeeper bankkeeper.Keeper,
+	bankKeeper cmn.BankKeeper,
 	codec codec.Codec,
 	addrCdc address.Codec,
 ) *Precompile {

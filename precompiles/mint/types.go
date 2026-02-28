@@ -11,7 +11,6 @@ import (
 	sdkerrors "cosmossdk.io/errors"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 
 	cmn "github.com/cosmos/evm/precompiles/common"
 )
@@ -33,7 +32,7 @@ type EventMint struct {
 
 // ValidateMint validates a mint request and constructs a correctly formatted (sdk.AccAddress, sdk.Coins) tuple
 // args: [to cmn.Address, token string, value *big.Int]
-func ValidateMint(ctx context.Context, addrCdc address.Codec, bk bankkeeper.Keeper, args []interface{}) (to common.Address, addr sdk.AccAddress, coins sdk.Coins, err error) {
+func ValidateMint(ctx context.Context, addrCdc address.Codec, bk cmn.BankKeeper, args []interface{}) (to common.Address, addr sdk.AccAddress, coins sdk.Coins, err error) {
 	if len(args) != 3 {
 		return common.Address{}, nil, nil, fmt.Errorf("invalid number of arguments; expected 3; got: %d", len(args))
 	}
