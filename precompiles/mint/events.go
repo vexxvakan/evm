@@ -1,6 +1,8 @@
 package mint
 
 import (
+	"math/big"
+
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
@@ -17,7 +19,7 @@ const (
 )
 
 // EmitMintEvent creates a new event emitted on a Mint transaction.
-func (p Precompile) EmitMintEvent(ctx sdk.Context, stateDB vm.StateDB, to common.Address, coins sdk.Coins) error {
+func (p Precompile) EmitMintEvent(ctx sdk.Context, stateDB vm.StateDB, to common.Address, token string, value *big.Int) error {
 	// Prepare the event topics
 	event := p.Events[EventTypeMint]
 	topics := make([]common.Hash, 3)
@@ -31,14 +33,11 @@ func (p Precompile) EmitMintEvent(ctx sdk.Context, stateDB vm.StateDB, to common
 		return err
 	}
 
-	token := coins.Denoms()[0]
 	topics[2], err = cmn.MakeTopic(token)
 	if err != nil {
 		return err
 	}
 
-	// Prepare the event data
-	value := coins.AmountOf(token)
 	arguments := abi.Arguments{event.Inputs[2]}
 	packed, err := arguments.Pack(value)
 	if err != nil {

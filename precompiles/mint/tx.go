@@ -1,11 +1,13 @@
 package mint
 
 import (
+	sdkerrors "cosmossdk.io/errors"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/core/vm"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
+	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
+	cmn "github.com/cosmos/evm/precompiles/common"
 )
 
 // Mint defines a method to mint native tokens using the x/mint module.
@@ -16,19 +18,25 @@ func (p *Precompile) Mint(
 	method *abi.Method,
 	args []interface{},
 ) ([]byte, error) {
-	to, toAddr, coins, err := ValidateMint(ctx, p.addrCdc, p.bankKeeper, args)
+	to, toAddr, token, value, err := ValidateMint(ctx, p.addrCdc, p.bankKeeper, args)
 	if err != nil {
 		return nil, err
 	}
 
-	err = p.bankKeeper.MintCoins(ctx, banktypes.ModuleName, coins)
+	tmpCoins := []cmn.Coin{{Denom: token, Amount: value}}
+	coins, err := cmn.NewSdkCoinsFromCoins(tmpCoins)
+	if err != nil {
+		return nil, sdkerrors.Wrap(ErrInvalidAmount, "failed to convert coins to sdk coin format")
+	}
+
+	err = p.bankKeeper.MintCoins(ctx, minttypes.ModuleName, coins)
 	if err != nil {
 		return nil, err
 	}
 
 	err = p.bankKeeper.SendCoinsFromModuleToAccount(
 		ctx,
-		banktypes.ModuleName,
+		minttypes.ModuleName,
 		toAddr,
 		coins,
 	)
@@ -36,7 +44,7 @@ func (p *Precompile) Mint(
 		return nil, err
 	}
 
-	if err = p.EmitMintEvent(ctx, stateDB, to, coins); err != nil {
+	if err = p.EmitMintEvent(ctx, stateDB, to, token, value); err != nil {
 		return nil, err
 	}
 
