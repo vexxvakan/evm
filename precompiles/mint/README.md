@@ -6,8 +6,8 @@
 
 ## Description
 
-The Mint precompile provides access to the Cosmos SDK `x/mint` module mint functionality through an EVM-compatible interface.
-This enables smart contracts to mint native tokens for accounts using either their `hex` or their `bech32` address.
+The Mint precompile provides access to the Cosmos SDK `x/bank` module MintCoins functionality through an EVM-compatible interface.
+This enables smart contracts to mint native tokens for accounts.
 
 ## Interface
 
@@ -19,8 +19,7 @@ This enables smart contracts to mint native tokens for accounts using either the
 function mint(address to, string token, uint256 value) external returns (bool success)
 ```
 
-Retrieves all native token balances for the specified account.
-Each balance includes the ERC-20 contract address and amount in the token's original precision.
+Mints `value` amount of `token` to the address of `to`
 
 **Parameters:**
 
@@ -32,14 +31,8 @@ Each balance includes the ERC-20 contract address and amount in the token's orig
 
 - Bool indicating success of the mint operation
 
-TODO: **Gas Cost:**
+## Demo
 
-### Data Structures
-
-```solidity
-TODO: Spec out
-```
-
-## Implementation Details
-
-TODO: Spec out
+There is a simple demo script located at ./precompiles/mint/demo.sh.
+It will run an account balance query, then mint a token, then query if the mint succeeded.
+The script requires a running local node. Easiest way is to run ./local_node.sh
