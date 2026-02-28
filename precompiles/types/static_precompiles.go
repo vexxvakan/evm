@@ -15,6 +15,7 @@ import (
 	govprecompile "github.com/cosmos/evm/precompiles/gov"
 	ics02precompile "github.com/cosmos/evm/precompiles/ics02"
 	ics20precompile "github.com/cosmos/evm/precompiles/ics20"
+	mintprecompile "github.com/cosmos/evm/precompiles/mint"
 	"github.com/cosmos/evm/precompiles/p256"
 	slashingprecompile "github.com/cosmos/evm/precompiles/slashing"
 	stakingprecompile "github.com/cosmos/evm/precompiles/staking"
@@ -23,6 +24,7 @@ import (
 	channelkeeper "github.com/cosmos/ibc-go/v10/modules/core/04-channel/keeper"
 
 	"github.com/cosmos/cosmos-sdk/codec"
+	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	distributionkeeper "github.com/cosmos/cosmos-sdk/x/distribution/keeper"
 	govkeeper "github.com/cosmos/cosmos-sdk/x/gov/keeper"
 	slashingkeeper "github.com/cosmos/cosmos-sdk/x/slashing/keeper"
@@ -182,5 +184,25 @@ func (s StaticPrecompiles) WithSlashingPrecompile(
 	)
 
 	s[slashingPrecompile.Address()] = slashingPrecompile
+	return s
+}
+
+func (s StaticPrecompiles) WithMintPrecompile(
+	bankKeeper bankkeeper.Keeper,
+	codec codec.Codec,
+	opts ...Option,
+) StaticPrecompiles {
+	options := defaultOptionals()
+	for _, opt := range opts {
+		opt(&options)
+	}
+
+	mintPrecompile := mintprecompile.NewPrecompile(
+		bankKeeper,
+		codec,
+		options.AddressCodec,
+	)
+
+	s[mintPrecompile.Address()] = mintPrecompile
 	return s
 }
